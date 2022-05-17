@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>New Password</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+	<style>
+		body {
+			font-family: 'Roboto', sans-serif;
+			font-size: 16px;
+			padding: 0;
+			margin: 0;
+			display: block;
+		}
+
+		.content_area {
+			text-align: center;
+			margin-top: 150px;
+		}
+
+		.content_area img {
+			height: 100px;
+			width: 100px;
+			background: red;
+			border-radius: 100%;
+			overflow: hidden;
+		}
+
+		.content_area p {
+			color: #000000;
+			font-size: 20px;
+		}
+
+		.content_area a {
+			background: #022152;
+			padding: 15px 60px;
+			border-radius: 60px;
+			color: #fff;
+			text-decoration: none;
+			font-size: 18px;
+			text-transform: uppercase;
+			margin-top: 0px;
+			display: inline-block;
+		}
+
+		.header {
+			background: #022152;
+			background-image: url(images/logo.png);
+			color: white;
+			font-size: 30px;
+			padding: 15px 10px;
+		}
+
+		.header img {
+			width: auto;
+			height: auto;
+			border: none;
+			border-radius: ;
+			background: #fff;
+			border-radius: 100%;
+		}
+
+		.footer {
+			padding: 30px 0px;
+			text-align: center;
+			background: #022152;
+			color: white;
+			font-size: 30px;
+		}
+
+		.content_area {
+			text-align: center;
+			padding: 249px 0px;
+			margin: 0px;
+		}
+
+		.form-box {
+			height: calc(100vh - 158px);
+			position: relative;
+		}
+
+		.login-form {
+			box-shadow: 0 0px 5px rgba(0, 0, 0, 0.12), 0 0px 5px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+			max-width: 500px;
+			width: 100%;
+			margin: 0 auto;
+			padding: 40px;
+			border-radius: 8px;
+			transform: translate(-50%, -50%);
+			top: 50%;
+			left: 50%;
+			position: absolute;
+		}
+
+		.login-form input {
+			margin-bottom: 15px;
+			height: 45px;
+			display: inline-block;
+			line-height: normal;
+			width: 100%;
+			box-sizing: border-box;
+			border: 1px solid #bdbdbd;
+			padding: 10px 16px;
+			border-radius: 5px;
+		}
+
+		.form-box button {
+			display: inline-block;
+			background: #022152;
+			color: #fff;
+			border: none;
+			padding: 10px 25px;
+			border-radius: 5px;
+			font-size: 16px;
+		}
+
+		.footer {
+			padding: 30px 0px;
+			text-align: center;
+			background: #022152;
+			color: white;
+			font-size: 30px;
+		}
+
+		@media (max-width : 768px) {
+			.login-form {
+				width: 85%;
+				box-sizing: border-box;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	{% load static %}
+	<div class="header">
+		<img src="" alt="" />
+	</div>
+	<div class="form-box">
+		<div class="login-form">
+			<form id="my-form">
+				<div style="text-align: center; margin-bottom : 14px">
+					<img src="/media/favicon.png" alt="" width="100px">
+				</div>
+
+				{% csrf_token %}
+				<div class="form-group">
+					<input type="password" onkeydown="checkKey(event)" id="txtPassword" placeholder="New Password" required>
+					<div style="color: red; margin-top: 5px;margin-bottom: 10px;" id="error1"></div>
+				</div>
+				<div>
+					<input type="password" onkeydown="checkKey(event)" id="txtConfirmPassword"
+						placeholder="Confirm Password" type="password" required>
+					<div style="color: red; margin-top: 5px;margin-bottom: 10px;" id="error2"></div>
+				</div>
+				<div align="center">
+					<button type="button" id="btnSubmit">Submit</button>
+				</div>
+			</form>
+			<div class="toshow" style="display: none">
+				<div style="text-align: center; margin-bottom : 14px">
+					<img src="/media/favicon.png" alt="" width="100px">
+					<p style="padding-top: 15px;">Your password is successfully reset.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer"></div>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		function checkKey(event) {
+			if (event.keyCode == 32) {
+				event.preventDefault();
+				return;
+			}
+		};
+
+		$(function () {
+			$("#btnSubmit")
+				.click(
+					function () {
+						var password = $("#txtPassword").val();
+						var confirmPassword = $("#txtConfirmPassword")
+							.val();
+						var lowerRegex = /[a-z]/;
+						var upperRegex = /[A-Z]/;
+						var numberRegex = /[0-9]/;
+						var specialRegex = /[$@$!%*?&]/;
+						var count = 0;
+						if (password.match(lowerRegex)) {
+							count += 1;
+						}
+						if (password.match(upperRegex)) {
+							count += 1;
+						}
+						if (password.match(numberRegex)) {
+							count += 1;
+						}
+						if (password.match(specialRegex)) {
+							count += 1;
+						}
+						if (password.trim() == "") {
+							$('#error1').html("Password field is required.").show();
+							return false;
+						}
+						else if (confirmPassword.trim() == "") {
+							$('#error1').html("").show();
+							$('#error2').html("Confirm password field is required.").show();
+							return false;
+						}
+						else if (password != confirmPassword) {
+							$('#error1').html("").show();
+							$('#error2').html("Password and confirm password doesn't match.").show();
+							return false;
+						}
+
+						else if (password.length < 6) {
+							$('#error1').html("Passwords must contain atleast 6 characters.").show();
+							$('#error2').html("").show();
+							return false;
+						}
+						else {
+							var url = window.location.search
+								.substring(1);
+							var mySubString = url.substring(url
+								.lastIndexOf("?") + 1, url
+									.lastIndexOf("&"));
+							var uid = mySubString.split("=")[1];
+							var jsonObj = {
+								"uid": uid,
+								"newPassword": password
+							};
+						}
+						$
+							.ajax({
+								url: 'http://157.245.218.104:8004/api/forgot_password',
+
+								type: "POST",
+								data: JSON.stringify(jsonObj),
+								dataType: 'json',
+								contentType: 'application/json',
+								success: function (result, status,
+									jqXHR) {
+									$('#my-form').hide();
+									$("div.toshow").show();
+								},
+								error: function (jqXHR, textStatus,
+									errorThrown) {
+									console.log('Error in Operation');
+								}
+							});
+					});
+		});
+	</script>
+</body>
+
+</html>
